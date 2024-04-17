@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/loginuser.tsx", "src/app/components/CardLoginCadastro/page.js", "src/app/LoginUser/page.js", "pages/CadastroUser/page.js", "src/app/components/CardLoginCadastro/page.tsx", "src/app/components/button-entrar/page.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/loginuser.tsx", "src/app/components/CardLoginCadastro/page.tsx", "src/app/LoginUser/page.js", "pages/CadastroUser/page.js", "src/app/components/CardLoginCadastro/page.tsx", "src/app/components/button-entrar/page.tsx"],
   "exclude": ["node_modules"]
 }
