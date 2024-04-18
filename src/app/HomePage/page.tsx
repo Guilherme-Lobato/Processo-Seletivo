@@ -1,8 +1,8 @@
 "use client"
-
 import React, { useState, useEffect } from "react";
 import styles from "./homePage.module.css";
 import axios from "axios";
+import CardProdutos from "../components/CardProdutos/page"; 
 
 interface Product {
     title: string;
@@ -19,6 +19,15 @@ export default function HomePage() {
     useEffect(() => {
         importApi();
     }, []);
+
+    const importApi = async () => {
+        try {
+            const response = await axios.get("https://fakestoreapi.com/products");
+            setProductData(response.data);
+        } catch (error) {
+            console.log("Erro ao obter dados da API:", error);
+        }
+    };
 
     const downloadCSV = () => {
         const csvContent =
@@ -38,26 +47,28 @@ export default function HomePage() {
         link.click();
     };
 
-    const importApi = async () => {
-        try {
-            const response = await axios.get("https://fakestoreapi.com/products");
-            setProductData((prevProducts) => [...prevProducts, ...response.data]);
-        } catch (error) {
-            console.log("Erro ao obter dados da API:", error);
+    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (e.target) {
+                    const text = e.target.result as string;
+                    processDataFromCSV(text);
+                }
+            };
+            reader.readAsText(file);
         }
     };
 
-    const handleExpandProduct = (product: Product) => {
-        if (expandedProduct && expandedProduct.title === product.title) {
-            setExpandedProduct(null); // Fecha o card se já estiver expandido
-        } else {
-            setExpandedProduct(product); // Expandir o card com a descrição do produto
-        }
-    };
-
-    const handleDeleteProduct = (product: Product) => {
-        const updatedProducts = productData.filter((p) => p.title !== product.title);
-        setProductData(updatedProducts);
+    const processDataFromCSV = (csvText: string) => {
+        const lines = csvText.split("\n");
+        const newData: Product[] = [];
+        lines.forEach((line) => {
+            const [title, price, description, image, category] = line.split(",");
+            newData.push({ title, price: parseFloat(price), description, image, category });
+        });
+        setProductData(newData);
     };
 
     return (
@@ -65,36 +76,15 @@ export default function HomePage() {
             <div className={styles.menu}>
                 <button className={styles.button} onClick={downloadCSV}>EXPORTAR ARQUIVO CSV</button>
                 <label htmlFor="file-upload" className={styles.labelinput}>IMPORTAR ARQUIVO CSV</label>
-                <input id="file-upload" className={styles.inputcsv} type="file" accept="csv/CSV" />
+                <input id="file-upload" className={styles.inputcsv} type="file" accept="csv/.CSV" onChange={handleFileUpload}/>
                 <button className={styles.button} onClick={importApi}>IMPORTAR DADOS DA API</button>
                 <button className={styles.button}>ADICIONAR NOVO PRODUTO</button>
             </div>
-
-            <div className={styles.container}>
-                <div className={styles.cardContainer}>
-                    {productData.map((product, index) => (
-                        <div className={styles.card} key={index}>
-                            <button className={styles.deleteButton} onClick={() => handleDeleteProduct(product)}>x</button>
-                            <img className={styles.cardImage} src={product.image} alt={product.title} />
-                            <div className={styles.cardContent}>
-                                <h3 className={styles.cardTitle}>{product.title}</h3>
-                                <p className={styles.cardPrice}>${product.price}</p>
-                                <button
-                                    className={styles.cardButton}
-                                    onClick={() => handleExpandProduct(product)}
-                                >
-                                    {expandedProduct && expandedProduct.title === product.title
-                                        ? "Fechar"
-                                        : "Saiba Mais"}
-                                </button>
-                                {expandedProduct && expandedProduct.title === product.title && (
-                                    <p className={styles.cardDescription}>{product.description}</p>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
+            <CardProdutos
+             productData={productData}
+             setProductData={setProductData}
+             expandedProduct={expandedProduct}
+             setExpandedProduct={setExpandedProduct}/>
         </div>
     );
 }
