@@ -25,7 +25,7 @@ export default function CadastroUser() {
         event.preventDefault();
         
         try {
-            const response = await axios.post('http://localhost:8000/cadastrar-usuario', formData);
+            const response = await axios.post('http://localhost:8000/cadastrar-usuario', { usuario: formData });
             console.log(response.data); 
         } catch (error) {
             console.error('Erro ao cadastrar usuário:', error);

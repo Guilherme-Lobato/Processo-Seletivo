@@ -1,0 +1,86 @@
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 500px; 
+    max-width: 90%; 
+    height: 400px; 
+    max-height: 90%; 
+}
+
+.close::after {
+    content: 'X'; 
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: end;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.salvar {
+    background-color: #45a049;
+    height: 50px;
+    width: 100px;
+    font-size: 20px;
+    border: none; 
+    outline: none; 
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.salvar:hover {
+    background-color: #3e8e41;
+}
+
+.buttons {
+    padding: 15px 10px;
+    justify-content: center;
+    display: flex;
+}
+
+.chooseImageButton {
+    background-color:rgb(119, 119, 119);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.chooseImageButton:hover {
+    background-color: #4e4e4e;
+}
+
+.inputImage {
+    display: none;
+}
+
+
+
+

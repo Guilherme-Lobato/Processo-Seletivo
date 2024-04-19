@@ -1,12 +1,11 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import Link from "next/link";
 import LoginCard from "../components/CardLoginCadastro/page";
 import styles from "./LoginUser.module.css";
 import InputLogin from "../components/input-login/page";
 import ButtonEntrar from "../components/button-entrar/page";
-import { useRouter } from "next/navigation"; 
-
+import { useRouter } from "next/navigation";
 
 export default function LoginUser() {
     const [nome, setNome] = useState("");
@@ -17,6 +16,7 @@ export default function LoginUser() {
         e.preventDefault();
 
         try {
+            // Tentativa de login na API externa
             const response = await fetch("https://fakestoreapi.com/auth/login", {
                 method: "POST",
                 headers: {
@@ -34,7 +34,25 @@ export default function LoginUser() {
 
                 router.push("/HomePage");
             } else {
-                console.error("Erro ao fazer login:", response.statusText);
+                const localLoginResponse = await fetch("http://localhost:8000/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        nome,
+                        senha,
+                    }),
+                });
+
+                if (localLoginResponse.ok) {
+                    const localUserData = await localLoginResponse.json();
+                    console.log("Usuário autenticado localmente:", localUserData);
+
+                    router.push("/HomePage");
+                } else {
+                    console.error("Erro ao fazer login:", response.statusText);
+                }
             }
         } catch (error) {
             console.error("Erro ao fazer login:", error);

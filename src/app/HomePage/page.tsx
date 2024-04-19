@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./homePage.module.css";
 import axios from "axios";
-import CardProdutos from "../components/CardProdutos/page"; 
+import CardProdutos from "../components/CardProdutos/page";
+import Cadastro from "../components/CadastroProduto/page"; 
+import Link from "next/link";
 
 interface Product {
     title: string;
@@ -15,17 +17,25 @@ interface Product {
 export default function HomePage() {
     const [productData, setProductData] = useState<Product[]>([]);
     const [expandedProduct, setExpandedProduct] = useState<Product | null>(null);
-
-    useEffect(() => {
-        importApi();
-    }, []);
+    const [showCadastro, setShowCadastro] = useState(false);
 
     const importApi = async () => {
         try {
             const response = await axios.get("https://fakestoreapi.com/products");
-            setProductData(response.data);
+            const newProducts = response.data;
+            setProductData((prevProducts) => [...prevProducts, ...newProducts]);
+            salvarProdutos(newProducts);
         } catch (error) {
             console.log("Erro ao obter dados da API:", error);
+        }
+    };
+
+    const salvarProdutos = async (produtos: Product[]) => {
+        try {
+            const response = await axios.post("https://localhost:8000/salvar-produtos", { produtos });
+            console.log(produtos);
+        } catch (error) {
+            console.log("Erro ao importar produtos:", error);
         }
     };
 
@@ -64,27 +74,63 @@ export default function HomePage() {
     const processDataFromCSV = (csvText: string) => {
         const lines = csvText.split("\n");
         const newData: Product[] = [];
-        lines.forEach((line) => {
-            const [title, price, description, image, category] = line.split(",");
-            newData.push({ title, price: parseFloat(price), description, image, category });
+        lines.forEach((line, index) => {
+            if (index === 0) return;
+            const fields = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if (fields.length === 6 || fields.length === 7) {
+                const titleIndex = fields.length === 6 ? 0 : 1; // Verifica se o número da linha está presente
+                const title = fields[titleIndex].replace(/"/g, '').trim();
+                const price = parseFloat(fields[titleIndex + 1].replace(/"/g, '').trim());
+                const description = fields[titleIndex + 2].replace(/"/g, '').trim();
+                const category = fields[titleIndex + 3].replace(/"/g, '').trim();
+                const image = fields[titleIndex + 4].replace(/"/g, '').trim();
+                newData.push({ title, price, description, category, image });
+            } else {
+                console.error("Número incorreto de campos na linha:", line);
+            }
         });
-        setProductData(newData);
+        if (newData.length > 0) {
+            if (productData.length > 0) {
+                setProductData((prevData) => [...prevData, ...newData]);
+            } else {
+                setProductData(newData);
+            }
+        }
+    };
+    
+    const handleAdicionarProdutoClick = () => {
+        setShowCadastro(true); 
     };
 
     return (
         <div className={styles.background}>
             <div className={styles.menu}>
-                <button className={styles.button} onClick={downloadCSV}>EXPORTAR ARQUIVO CSV</button>
-                <label htmlFor="file-upload" className={styles.labelinput}>IMPORTAR ARQUIVO CSV</label>
+                
+                <button className={styles.button} onClick={downloadCSV}>EXPORTAR PRODUTOS EM FORMATO CSV</button>
+                <label htmlFor="file-upload" className={styles.labelinput}>IMPORTAR PRODUTOS DE UM ARQUIVO CSV</label>
                 <input id="file-upload" className={styles.inputcsv} type="file" accept="csv/.CSV" onChange={handleFileUpload}/>
-                <button className={styles.button} onClick={importApi}>IMPORTAR DADOS DA API</button>
-                <button className={styles.button}>ADICIONAR NOVO PRODUTO</button>
+                <button className={styles.button} onClick={importApi}>IMPORTAR PRODUTOS DA API</button>
+                <button className={styles.button} onClick={handleAdicionarProdutoClick}>CADASTRAR NOVO PRODUTO</button>
+                <Link href="/LoginUser" passHref className={styles.redirect}>SAIR</Link>
             </div>
+            {showCadastro && (
+                <div className={styles.modalBackground}>
+                    <div className={styles.modalContent}>
+                        <Cadastro 
+                            onClose={() => setShowCadastro(false)} 
+                            onSave={(data) => {
+                                console.log("Dados do novo produto:", data);
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
             <CardProdutos
-             productData={productData}
-             setProductData={setProductData}
-             expandedProduct={expandedProduct}
-             setExpandedProduct={setExpandedProduct}/>
+                productData={productData}
+                setProductData={setProductData}
+                expandedProduct={expandedProduct}
+                setExpandedProduct={setExpandedProduct}
+            />
         </div>
-    );
+    );    
 }

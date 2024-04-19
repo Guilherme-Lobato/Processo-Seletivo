@@ -22,20 +22,11 @@ const CardProdutos = ({
     setExpandedProduct: React.Dispatch<React.SetStateAction<Product | null>>;
 }) => {
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const data: Product[] = await fetch('https://fakestoreapi.com/products')
-                .then(response => response.json());
-            setProductData(data);
-        };
-        fetchData();
-    }, []);
-
     const handleExpandProduct = (product: Product) => {
         if (expandedProduct && expandedProduct.title === product.title) {
-            setExpandedProduct(null); 
+            setExpandedProduct(null);
         } else {
-            setExpandedProduct(product); 
+            setExpandedProduct(product);
         }
     };
 
@@ -75,10 +66,11 @@ const ProductCard = ({
 }) => {
     return (
         <div className={styles.cardContainer}>
-            <div className={styles.card}
-                 onMouseLeave={() => setExpandedProduct(null)}>
+            <div className={styles.card} onMouseLeave={() => setExpandedProduct(null)}>
                 <button className={styles.deleteButton} onClick={() => handleDeleteProduct(product)}>x</button>
-                <img className={styles.cardImage} src={product.image} alt={product.title} />
+                <div className={styles.imageContainer}>
+                    <img className={styles.cardImage} src={product.image} alt={product.title} />
+                </div>
                 <div className={styles.cardContent}>
                     <h3 className={styles.cardTitle}>{product.title}</h3>
                     <p className={styles.cardPrice}>${product.price}</p>
