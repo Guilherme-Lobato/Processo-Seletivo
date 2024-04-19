@@ -15,15 +15,14 @@ interface Product {
 }
 
 export default function HomePage() {
-    const [productData, setProductData] = useState<Product[]>([]);
-    const [expandedProduct, setExpandedProduct] = useState<Product | null>(null);
-    const [showCadastro, setShowCadastro] = useState(false);
+    const [valoresProduto, atualizaProduto] = useState<Product[]>([]);
+    const [modalCadastro, estadoModal] = useState(false);
 
     const importApi = async () => {
         try {
-            const response = await axios.get("https://fakestoreapi.com/products");
-            const newProducts = response.data;
-            setProductData((prevProducts) => [...prevProducts, ...newProducts]);
+            const buscar = await axios.get("https://fakestoreapi.com/products");
+            const newProducts = buscar.data;
+            atualizaProduto((prevProducts) => [...prevProducts, ...newProducts]);
             salvarProdutos(newProducts);
         } catch (error) {
             console.log("Erro ao obter dados da API:", error);
@@ -32,7 +31,7 @@ export default function HomePage() {
 
     const salvarProdutos = async (produtos: Product[]) => {
         try {
-            const response = await axios.post("https://localhost:8000/salvar-produtos", { produtos });
+            const salvar = await axios.post("https://localhost:8000/salvar-produtos", { produtos });
             console.log(produtos);
         } catch (error) {
             console.log("Erro ao importar produtos:", error);
@@ -42,7 +41,7 @@ export default function HomePage() {
     const downloadCSV = () => {
         const csvContent =
             "data:text/csv;charset=utf-8," +
-            productData.map((product) => {
+            valoresProduto.map((product) => {
                 return (
                     Object.values(product)
                         .map((value) => (typeof value === "string" ? `"${value}"` : value))
@@ -57,7 +56,7 @@ export default function HomePage() {
         link.click();
     };
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadCSV = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -78,7 +77,7 @@ export default function HomePage() {
             if (index === 0) return;
             const fields = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
             if (fields.length === 6 || fields.length === 7) {
-                const titleIndex = fields.length === 6 ? 0 : 1; // Verifica se o número da linha está presente
+                const titleIndex = fields.length === 6 ? 0 : 1; 
                 const title = fields[titleIndex].replace(/"/g, '').trim();
                 const price = parseFloat(fields[titleIndex + 1].replace(/"/g, '').trim());
                 const description = fields[titleIndex + 2].replace(/"/g, '').trim();
@@ -90,16 +89,16 @@ export default function HomePage() {
             }
         });
         if (newData.length > 0) {
-            if (productData.length > 0) {
-                setProductData((prevData) => [...prevData, ...newData]);
+            if (valoresProduto.length > 0) {
+                atualizaProduto((prevData) => [...prevData, ...newData]);
             } else {
-                setProductData(newData);
+                atualizaProduto(newData);
             }
         }
     };
     
-    const handleAdicionarProdutoClick = () => {
-        setShowCadastro(true); 
+    const cadastrarProduto = () => {
+        estadoModal(true); 
     };
 
     return (
@@ -108,17 +107,17 @@ export default function HomePage() {
                 
                 <button className={styles.button} onClick={downloadCSV}>EXPORTAR PRODUTOS EM FORMATO CSV</button>
                 <label htmlFor="file-upload" className={styles.labelinput}>IMPORTAR PRODUTOS DE UM ARQUIVO CSV</label>
-                <input id="file-upload" className={styles.inputcsv} type="file" accept="csv/.CSV" onChange={handleFileUpload}/>
+                <input id="file-upload" className={styles.inputcsv} type="file" accept="csv/.CSV" onChange={uploadCSV}/>
                 <button className={styles.button} onClick={importApi}>IMPORTAR PRODUTOS DA API</button>
-                <button className={styles.button} onClick={handleAdicionarProdutoClick}>CADASTRAR NOVO PRODUTO</button>
+                <button className={styles.button} onClick={cadastrarProduto}>CADASTRAR NOVO PRODUTO</button>
                 <Link href="/LoginUser" passHref className={styles.redirect}>SAIR</Link>
             </div>
-            {showCadastro && (
+            {modalCadastro && (
                 <div className={styles.modalBackground}>
                     <div className={styles.modalContent}>
                         <Cadastro 
-                            onClose={() => setShowCadastro(false)} 
-                            onSave={(data) => {
+                            fechar={() => estadoModal(false)} 
+                            salvar={(data) => {
                                 console.log("Dados do novo produto:", data);
                             }}
                         />
@@ -126,10 +125,8 @@ export default function HomePage() {
                 </div>
             )}
             <CardProdutos
-                productData={productData}
-                setProductData={setProductData}
-                expandedProduct={expandedProduct}
-                setExpandedProduct={setExpandedProduct}
+                listaProdutos={valoresProduto}
+                novaListaProdutos={atualizaProduto}
             />
         </div>
     );    

@@ -6,58 +6,37 @@ import styles from "./LoginUser.module.css";
 import InputLogin from "../components/input-login/page";
 import ButtonEntrar from "../components/button-entrar/page";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function LoginUser() {
     const [nome, setNome] = useState("");
     const [senha, setSenha] = useState("");
     const router = useRouter();
 
-    const handleEntrarClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const logar = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
 
         try {
-            // Tentativa de login na API externa
-            const response = await fetch("https://fakestoreapi.com/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: nome,
-                    password: senha,
-                }),
+            const logar = await axios.post("https://fakestoreapi.com/auth/login", {
+                name: nome,
+                password: senha
             });
-
-            if (response.ok) {
-                const data = await response.json();
+            if (logar.status === 200) {
+                const data = logar.data;
                 console.log("Token recebido:", data.token);
-
+        
                 router.push("/HomePage");
             } else {
-                const localLoginResponse = await fetch("http://localhost:8000/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        nome,
-                        senha,
-                    }),
+                const logar = await axios.post("http://localhost:8000/login", {
+                    nome,
+                    senha
                 });
-
-                if (localLoginResponse.ok) {
-                    const localUserData = await localLoginResponse.json();
-                    console.log("Usuário autenticado localmente:", localUserData);
-
-                    router.push("/HomePage");
-                } else {
-                    console.error("Erro ao fazer login:", response.statusText);
-                }
+                router.push("/HomePage");
             }
         } catch (error) {
-            console.error("Erro ao fazer login:", error);
+            console.error('Erro ao fazer login:', error);
         }
-    };
+    }
 
     return (
         <div className={styles.background}>
@@ -75,7 +54,7 @@ export default function LoginUser() {
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                     />
-                    <ButtonEntrar onClick={handleEntrarClick}>Entrar</ButtonEntrar>
+                    <ButtonEntrar onClick={logar}>Entrar</ButtonEntrar>
                     <Link href="/CadastroUser" passHref className={styles.redirect}>
                         Ainda não possui conta?
                     </Link>

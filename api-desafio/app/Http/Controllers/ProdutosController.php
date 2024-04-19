@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Product;
-use Illuminate\Support\Facades\Log; // Importar a classe Log
 
 class ProdutosController extends Controller
 {
@@ -21,9 +20,6 @@ class ProdutosController extends Controller
                 'image' => $produto['image'],
                 'category' => $produto['category'],
             ]);
-
-            // Adicionar uma instrução de log para verificar se o produto foi criado com sucesso
-            Log::info('Produto criado com ID: ' . $produtoCriado->id);
         }
 
         return response()->json(['message' => 'Produtos importados com sucesso'], 200);
