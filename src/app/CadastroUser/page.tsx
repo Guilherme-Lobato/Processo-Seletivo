@@ -9,22 +9,30 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface ValoresCadastro {
-    nome: string;
+    name: string;
     email: string;
-    senha: string;
+    password: string;
 }
 
 export default function CadastroUser() {
     const router = useRouter();
+    const [error, setError] = useState("");
     const [valoresCadastro, setValoresCadastro] = useState<ValoresCadastro>({
-        nome: '',
+        name: '',
         email: '',
-        senha: ''
+        password: ''
     });
 
     const enviarCadastro = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (!valoresCadastro.name || !valoresCadastro.password || !valoresCadastro.email) {
+            setError("Por favor, preencha todos os campos.");
+            return;
+        }
+
         try {
-            const response = await axios.post('http://localhost:8000/cadastrar-usuario', { usuario: valoresCadastro });
+            const response = await axios.post('http://localhost:8000/register', { usuario: valoresCadastro });
             console.log(response.data);
             router.push("/LoginUser"); 
         } catch (error) {
@@ -44,9 +52,10 @@ export default function CadastroUser() {
         <div className={styles.background}>
             <LoginCard title="Crie sua conta">
                 <form className={styles.form} onSubmit={enviarCadastro}>
-                    <InputLogin type="text" placeholder="Seu Nome" name="nome" value={valoresCadastro.nome}  onChange={handleChange}/>
+                    <InputLogin type="text" placeholder="Seu Nome" name="name" value={valoresCadastro.name}  onChange={handleChange}/>
                     <InputLogin type="email" placeholder="Seu E-mail" name="email" value={valoresCadastro.email}  onChange={handleChange}/>
-                    <InputLogin type="password" placeholder="Sua senha" name="senha" value={valoresCadastro.senha}  onChange={handleChange}/>
+                    <InputLogin type="password" placeholder="Sua senha" name="password" value={valoresCadastro.password}  onChange={handleChange}/>
+                    {error && <p className={styles.error}>{error}</p>}
                     <ButtonEntrar type="submit">Cadastrar</ButtonEntrar>
                     <Link href="/LoginUser" passHref className={styles.redirect}>
                         Já possui conta?

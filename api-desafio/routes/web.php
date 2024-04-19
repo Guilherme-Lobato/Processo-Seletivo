@@ -6,9 +6,8 @@ use App\Http\Controllers\UsuariosController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProdutosController;
 
-Route::post('/cadastrar-usuario', [UsuariosController::class, 'salvarUsuario']);
-
-Route::get('/login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
 
 Route::post('/salvar-produtos', [ProdutosController::class, 'salvarProdutos']);
 

@@ -8,28 +8,51 @@ interface Props {
     salvar: (data: FormData) => void; 
 }
 
+interface ValoresCadastro {
+    title: string,
+    price: string,
+    description: string,
+    category: string,
+    imageUrl: string
+}
+
 const Cadastro: React.FC<Props> = ({ fechar, salvar }) => {
-    const [title, setTitle] = useState("");
-    const [price, setPrice] = useState("");
-    const [description, setDescription] = useState("");
-    const [category, setCategory] = useState("");
-    const [imageUrl, setImageUrl] = useState(""); 
+    const [error, setError] = useState<string>('');
+    const [valoresCadastro, setValoresCadastro] = useState<ValoresCadastro>({
+        title: '',
+        price: '',
+        description: '',
+        category: '',
+        imageUrl: ''
+    });
 
     const salvarForm = async () => {
-        const valoresForm = new FormData();
-        valoresForm.append('title', title);
-        valoresForm.append('price', price);
-        valoresForm.append('description', description);
-        valoresForm.append('category', category);
-        valoresForm.append('image', imageUrl); 
+        if (!valoresCadastro.title || !valoresCadastro.price || !valoresCadastro.description || !valoresCadastro.category || !valoresCadastro.imageUrl) {
+            setError("Por favor, preencha todos os campos.");
+            return;
+        }
 
         try {
-            await axios.post('http://localhost:8000/salvar-produtos', valoresForm);
-            salvar(valoresForm);
+            const formData = new FormData();
+            Object.entries(valoresCadastro).forEach(([key, value]) => {
+                formData.append(key, value);
+            });
+
+            await axios.post('http://localhost:8000/salvar-produtos', formData);
+            salvar(formData);
             fechar();
         } catch (error) {
             console.error('Erro ao salvar produto:', error);
+            setError("Erro ao salvar produto.");
         }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, campo: keyof ValoresCadastro) => {
+        const { value } = e.target;
+        setValoresCadastro(prevState => ({
+            ...prevState,
+            [campo]: value
+        }));
     };
 
     return (
@@ -40,40 +63,40 @@ const Cadastro: React.FC<Props> = ({ fechar, salvar }) => {
                     <Input
                         type="text"
                         placeholder="Título"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        value={valoresCadastro.title}
+                        onChange={(e) => handleChange(e, 'title')}
                         required
                     />
                     <Input
                         type="text"
                         placeholder="Preço"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
+                        value={valoresCadastro.price}
+                        onChange={(e) => handleChange(e, 'price')}
                         required
                     />
                     <Input
                         type="text"
                         placeholder="Descrição"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        value={valoresCadastro.description}
+                        onChange={(e) => handleChange(e, 'description')}
                         required
                     />
                     <Input
                         type="text"
                         placeholder="Categoria"
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
+                        value={valoresCadastro.category}
+                        onChange={(e) => handleChange(e, 'category')}
                         required
                     />
                     <Input
                         type="text"
-                        placeholder="URL da imagem" 
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)} 
+                        placeholder="URL da imagem"
+                        value={valoresCadastro.imageUrl}
+                        onChange={(e) => handleChange(e, 'imageUrl')}
                         required
                     />
                 </div>
-
+                {error && <span className={styles.error}>{error}</span>}
                 <div className={styles.buttons}>
                     <button className={styles.salvar} onClick={salvarForm}>Salvar</button>
                 </div>

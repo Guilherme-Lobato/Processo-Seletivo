@@ -9,17 +9,23 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function LoginUser() {
-    const [nome, setNome] = useState("");
-    const [senha, setSenha] = useState("");
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
     const router = useRouter();
+    const [error, setError] = useState("");
 
     const logar = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
 
+        if (!name || !password) {
+            setError("Por favor, preencha todos os campos.");
+            return;
+        }
+
         try {
             const logar = await axios.post("https://fakestoreapi.com/auth/login", {
-                name: nome,
-                password: senha
+                name: name,
+                password: password
             });
             if (logar.status === 200) {
                 const data = logar.data;
@@ -28,12 +34,13 @@ export default function LoginUser() {
                 router.push("/HomePage");
             } else {
                 const logar = await axios.post("http://localhost:8000/login", {
-                    nome,
-                    senha
+                    name,
+                    password
                 });
                 router.push("/HomePage");
             }
         } catch (error) {
+            setError("Credenciais incorretas, por favor, tente novamente.");
             console.error('Erro ao fazer login:', error);
         }
     }
@@ -45,15 +52,16 @@ export default function LoginUser() {
                     <InputLogin
                         type="text" 
                         placeholder="Seu nome de usuário"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
                     />
                     <InputLogin
                         type="password"
                         placeholder="Sua senha"
-                        value={senha}
-                        onChange={(e) => setSenha(e.target.value)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
+                    {error && <p className={styles.error}>{error}</p>}
                     <ButtonEntrar onClick={logar}>Entrar</ButtonEntrar>
                     <Link href="/CadastroUser" passHref className={styles.redirect}>
                         Ainda não possui conta?

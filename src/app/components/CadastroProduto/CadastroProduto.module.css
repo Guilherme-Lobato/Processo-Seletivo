@@ -81,6 +81,12 @@
     display: none;
 }
 
+.error {
+    color: rgb(255, 0, 0);
+    font-size: 13px;
+    font-weight: bold;
+}
+
 
 
 
