@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function LoginUser() {
-    const [name, setName] = useState("");
+    const [username, setName] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
     const [error, setError] = useState("");
@@ -17,14 +17,14 @@ export default function LoginUser() {
     const logar = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
 
-        if (!name || !password) {
+        if (!username || !password) {
             setError("Por favor, preencha todos os campos.");
             return;
         }
 
         try {
             const logar = await axios.post("https://fakestoreapi.com/auth/login", {
-                name: name,
+                username: username,
                 password: password
             });
             if (logar.status === 200) {
@@ -34,8 +34,8 @@ export default function LoginUser() {
                 router.push("/HomePage");
             } else {
                 const logar = await axios.post("http://localhost:8000/login", {
-                    name,
-                    password
+                    name: username,
+                    password:password
                 });
                 router.push("/HomePage");
             }
@@ -52,7 +52,7 @@ export default function LoginUser() {
                     <InputLogin
                         type="text" 
                         placeholder="Seu nome de usuário"
-                        value={name}
+                        value={username}
                         onChange={(e) => setName(e.target.value)}
                     />
                     <InputLogin
