@@ -34,7 +34,7 @@ export default function HomePage() {
             const salvar = await axios.post("https://localhost:8000/salvar-produtos", { produtos });
             console.log(produtos);
         } catch (error) {
-            console.log("Erro ao importar produtos:", error);
+            console.log("Erro para salvar produtos:", error);
         }
     };
 
