@@ -6,7 +6,7 @@ import axios from "axios";
 
 interface Props {
     fechar: () => void;
-    salvar: (data: FormData) => void; 
+    salvar: (valores: ValoresCadastro) => void; 
 }
 
 interface ValoresCadastro {
@@ -40,7 +40,7 @@ const Cadastro: React.FC<Props> = ({ fechar, salvar }) => {
             });
 
             await axios.post('http://localhost:8000/salvar-produtos', formData);
-            salvar(formData);
+            salvar(valoresCadastro);
             fechar();
         } catch (error) {
             console.error('Erro ao salvar produto:', error);
