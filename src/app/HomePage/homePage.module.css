@@ -1,0 +1,72 @@
+.background {
+    min-height: 100vh;
+    background-color: #fff;
+}
+
+.button {
+    padding: 15px 30px;
+    background-color: #fff;
+    color: #000000;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    height: 100px;
+    max-width: 300px;
+    box-shadow: 0 0 20px rgb(0, 0, 0); 
+    border: none; 
+    transition: box-shadow 0.3s ease; 
+}
+
+.button:hover {
+    background-color: rgb(182, 180, 180);
+}
+
+.inputcsv[type="file"] {
+    display: none;
+}
+
+.labelinput {
+    padding: 25px 30px;
+    background-color: #fff;
+    color: #000000;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    height: 100px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 0 20px rgb(0, 0, 0);
+    min-width: 300px;
+}
+
+.labelinput:hover {
+    background-color: rgb(182, 180, 180);
+}
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 100px 15px;
+}
+
+.redirect {
+    text-decoration: none;
+    font-size: 30px;
+    font-weight: bold;
+    display: flex;
+    justify-content: end;
+    color: rgb(0, 0, 0);
+    background-color: #b6b8b3;
+    border-radius: 10px;
+    cursor: pointer;
+    height: 40px;
+    padding: 0 10px;
+    align-items: center;
+}
+
+.redirect:hover {
+    background-color: #818383;
+}

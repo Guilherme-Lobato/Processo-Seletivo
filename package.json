@@ -9,14 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/chip": "^2.0.26",
+    "@nextui-org/table": "^2.0.29",
+    "axios": "^1.6.8",
+    "json-web-token": "^3.2.0",
+    "next": "^14.2.1",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.1"
+    "react-papaparse": "^4.4.0",
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
-    "@types/react-dom": "^18"
+    "@types/react-dom": "^18",
+    "typescript": "^5"
   }
 }
