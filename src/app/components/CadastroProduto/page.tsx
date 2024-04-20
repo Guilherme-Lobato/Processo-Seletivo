@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import styles from "./CadastroProduto.module.css";
 import Input from "../input-login/page";

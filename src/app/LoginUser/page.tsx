@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function LoginUser() {
-    const [username, setName] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
     const [error, setError] = useState("");
@@ -53,7 +53,7 @@ export default function LoginUser() {
                         type="text" 
                         placeholder="Seu nome de usuário"
                         value={username}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                     <InputLogin
                         type="password"

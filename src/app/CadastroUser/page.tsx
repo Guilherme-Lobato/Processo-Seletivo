@@ -32,7 +32,7 @@ export default function CadastroUser() {
         }
 
         try {
-            const response = await axios.post('http://localhost:8000/register', { usuario: valoresCadastro });
+            const response = await axios.post('http://localhost:8000/register', { register: valoresCadastro });
             console.log(response.data);
             router.push("/LoginUser"); 
         } catch (error) {

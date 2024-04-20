@@ -1,5 +1,5 @@
 "use client"
-import estilos from "./card.module.css";
+import styles from "./card.module.css";
 import React, { useState, useEffect } from "react";
 
 interface Produto {
@@ -38,23 +38,23 @@ const CardProdutos = ({
     return (
         <div>
             {listaProdutos.map((produto, index) => (
-                <div key={index} className={estilos.cardContainer} onMouseLeave={() => setDescricaoExpandida(null)}>
-                    <div className={estilos.card}>
-                        <button className={estilos.deleteButton} onClick={() => excluirProduto(produto.id)}>x</button>
-                        <div className={estilos.imageContainer}>
-                            <img className={estilos.cardImage} src={produto.image} alt={produto.title} />
+                <div key={index} className={styles.cardContainer} onMouseLeave={() => setDescricaoExpandida(null)}>
+                    <div className={styles.card}>
+                        <button className={styles.deleteButton} onClick={() => excluirProduto(produto.id)}>x</button>
+                        <div className={styles.imageContainer}>
+                            <img className={styles.cardImage} src={produto.image} alt={produto.title} />
                         </div>
-                        <div className={estilos.cardContent}>
-                            <h3 className={estilos.cardTitle}>{produto.title}</h3>
-                            <p className={estilos.cardPrice}>${produto.price}</p>
+                        <div className={styles.cardContent}>
+                            <h3 className={styles.cardTitle}>{produto.title}</h3>
+                            <p className={styles.cardPrice}>${produto.price}</p>
                             <button 
-                                className={estilos.cardButton} 
+                                className={styles.cardButton} 
                                 onClick={() => saibaMais(produto.id)}
                             >
                                 Saiba Mais
                             </button>
                             {descricaoExpandida === produto.id && (
-                                <p className={estilos.cardDescription}>{produto.description}</p>
+                                <p className={styles.cardDescription}>{produto.description}</p>
                             )}
                         </div>
                     </div>
