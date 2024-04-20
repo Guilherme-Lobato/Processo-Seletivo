@@ -7,6 +7,7 @@ import Cadastro from "../components/CadastroProduto/page";
 import Link from "next/link";
 
 interface Product {
+    id: number;
     title: string;
     price: number;
     description: string;
@@ -34,7 +35,7 @@ export default function HomePage() {
             const salvar = await axios.post("https://localhost:8000/salvar-produtos", { produtos });
             console.log(produtos);
         } catch (error) {
-            console.log("Erro para salvar produtos:", error);
+            console.log("Erro ao importar produtos:", error);
         }
     };
 
@@ -83,7 +84,8 @@ export default function HomePage() {
                 const description = fields[titleIndex + 2].replace(/"/g, '').trim();
                 const category = fields[titleIndex + 3].replace(/"/g, '').trim();
                 const image = fields[titleIndex + 4].replace(/"/g, '').trim();
-                newData.push({ title, price, description, category, image });
+                const id = parseInt(fields[0].replace(/"/g, '').trim());
+                newData.push({ id, title, price, description, category, image });
             } else {
                 console.error("Número incorreto de campos na linha:", line);
             }
