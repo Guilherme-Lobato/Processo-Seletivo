@@ -5,7 +5,7 @@ import Input from "../input-login/page";
 import axios from "axios";
 
 interface Props {
-    fechar: any;
+    fechar: (arg?: any) => void;
     salvar: (valores: ValoresCadastro) => void; 
 }
 
