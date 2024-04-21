@@ -1,10 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import LoginCard from "../components/CardLoginCadastro/page";
 import styles from "./LoginUser.module.css";
 import InputLogin from "../components/input-login/page";
-import ButtonEntrar from "../components/button-entrar/page";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -14,8 +13,8 @@ export default function LoginUser() {
     const router = useRouter();
     const [error, setError] = useState("");
 
-    const logar = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
+    const logar = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
         if (!username || !password) {
             setError("Por favor, preencha todos os campos.");
@@ -48,7 +47,7 @@ export default function LoginUser() {
     return (
         <div className={styles.background}>
             <LoginCard title="Entre em sua conta">
-                <form className={styles.form}>
+                <form className={styles.form} onSubmit={logar}>
                     <InputLogin
                         type="text" 
                         placeholder="Seu nome de usuário"
@@ -62,7 +61,7 @@ export default function LoginUser() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     {error && <p className={styles.error}>{error}</p>}
-                    <ButtonEntrar onClick={logar}>Entrar</ButtonEntrar>
+                    <button type="submit" className={styles.button}>Entrar</button>
                     <Link href="/CadastroUser" passHref className={styles.redirect}>
                         Ainda não possui conta?
                     </Link>

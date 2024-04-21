@@ -4,7 +4,6 @@ import axios from 'axios';
 import LoginCard from "../components/CardLoginCadastro/page";
 import styles from "./CadastroUser.module.css";
 import InputLogin from "../components/input-login/page";
-import ButtonEntrar from "../components/button-entrar/page";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -56,7 +55,7 @@ export default function CadastroUser() {
                     <InputLogin type="email" placeholder="Seu E-mail" name="email" value={valoresCadastro.email}  onChange={handleChange}/>
                     <InputLogin type="password" placeholder="Sua senha" name="password" value={valoresCadastro.password}  onChange={handleChange}/>
                     {error && <p className={styles.error}>{error}</p>}
-                    <ButtonEntrar type="submit">Cadastrar</ButtonEntrar>
+                    <button type="submit" className={styles.button}>Cadastrar</button>
                     <Link href="/LoginUser" passHref className={styles.redirect}>
                         Já possui conta?
                     </Link>
