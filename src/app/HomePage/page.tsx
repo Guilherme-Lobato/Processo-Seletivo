@@ -118,7 +118,7 @@ export default function HomePage() {
                 <div className={styles.modalBackground}>
                     <div className={styles.modalContent}>
                         <Cadastro 
-                            fechar={() => estadoModal(false)} 
+                            fechar={() => estadoModal(false) as any} 
                             salvar={(data) => {
                                 console.log("Dados do novo produto:", data);
                             }}
