@@ -9,5 +9,5 @@ use App\Http\Controllers\ProdutosController;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-Route::post('/salvar-produtos', [ProdutosController::class, 'salvarProdutos']);
+Route::post('salvar-produtos', [ProdutosController::class, 'salvarProdutos']);
 

@@ -33,7 +33,7 @@ export default function CadastroUser() {
         try {
             const response = await axios.post('http://localhost:8000/register', { register: valoresCadastro });
             console.log(response.data);
-            router.push("/LoginUser"); 
+            router.push("http://localhost:3000"); 
         } catch (error) {
             console.error('Erro ao cadastrar usuário:', error);
         }
@@ -56,7 +56,7 @@ export default function CadastroUser() {
                     <InputLogin type="password" placeholder="Sua senha" name="password" value={valoresCadastro.password}  onChange={handleChange}/>
                     {error && <p className={styles.error}>{error}</p>}
                     <button type="submit" className={styles.button}>Cadastrar</button>
-                    <Link href="/LoginUser" passHref className={styles.redirect}>
+                    <Link href="http://localhost:3000" passHref className={styles.redirect}>
                         Já possui conta?
                     </Link>
                 </form>

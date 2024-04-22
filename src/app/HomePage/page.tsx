@@ -112,15 +112,15 @@ export default function HomePage() {
                 <input id="file-upload" className={styles.inputcsv} type="file" accept="csv/.CSV" onChange={uploadCSV}/>
                 <button className={styles.button} onClick={importApi}>IMPORTAR PRODUTOS DA API</button>
                 <button className={styles.button} onClick={cadastrarProduto}>CADASTRAR NOVO PRODUTO</button>
-                <Link href="/LoginUser" passHref className={styles.redirect}>SAIR</Link>
+                <Link href="http://localhost:3000" passHref className={styles.redirect}>SAIR</Link>
             </div>
             {modalCadastro && (
                 <div className={styles.modalBackground}>
                     <div className={styles.modalContent}>
                         <Cadastro 
-                             fechar={() => estadoModal(false)} 
+                            fechar={() => estadoModal(false)} 
                             salvar={(data) => {
-                                console.log("Dados do novo produto:", data);
+                            console.log("Dados do novo produto:", data);
                             }}
                         />
                     </div>

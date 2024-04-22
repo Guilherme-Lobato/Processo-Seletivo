@@ -1,95 +1,72 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import React, { FormEvent, useState } from "react";
+import Link from "next/link";
+import LoginCard from "./components/CardLoginCadastro/page";
+import styles from "./LoginUser.module.css";
+import InputLogin from "./components/input-login/page";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+export default function LoginUser() {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const router = useRouter();
+    const [error, setError] = useState("");
+
+    const logar = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (!username || !password) {
+            setError("Por favor, preencha todos os campos.");
+            return;
+        }
+
+        try {
+            const logar = await axios.post("https://fakestoreapi.com/auth/login", {
+                username: username,
+                password: password
+            });
+            if (logar.status === 200) {
+                const data = logar.data;
+                console.log("Token recebido:", data.token);
+        
+                router.push("/HomePage");
+            } else {
+                const logar = await axios.post("http://localhost:8000/login", {
+                    name: username,
+                    password:password
+                });
+                router.push("/HomePage");
+            }
+            } catch (error) {
+                setError("Credenciais incorretas, por favor, tente novamente.");
+                console.error('Erro ao fazer login:', error);
+            }
+    }
+
+    return (
+        <div className={styles.background}>
+            <LoginCard title="Entre em sua conta">
+                <form className={styles.form} onSubmit={logar}>
+                    <InputLogin
+                        type="text" 
+                        placeholder="Seu nome de usuário"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <InputLogin
+                        type="password"
+                        placeholder="Sua senha"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {error && <p className={styles.error}>{error}</p>}
+                    <button type="submit" className={styles.button}>Entrar</button>
+                    <Link href="/CadastroUser" passHref className={styles.redirect}>
+                        Ainda não possui conta?
+                    </Link>
+                </form>
+            </LoginCard>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+    );
 }

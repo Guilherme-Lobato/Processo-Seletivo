@@ -4,7 +4,7 @@ import styles from "./CadastroProduto.module.css";
 import Input from "../input-login/page";
 import axios from "axios";
 
-interface Props {
+interface AbertoFechado {
     fechar: (arg?: any) => void;
     salvar: (valores: ValoresCadastro) => void; 
 }
@@ -17,7 +17,7 @@ interface ValoresCadastro {
     imageUrl: string
 }
 
-const Cadastro: React.FC<Props> = ({ fechar, salvar }) => {
+const Cadastro: React.FC<AbertoFechado> = ({ fechar, salvar }) => {
     const [error, setError] = useState<string>('');
     const [valoresCadastro, setValoresCadastro] = useState<ValoresCadastro>({
         title: '',
